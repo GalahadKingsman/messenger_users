@@ -2,31 +2,37 @@ package app
 
 import (
 	"fmt"
+	"github.com/GalahadKingsman/messenger_users/internal/app/userservice"
 	"github.com/GalahadKingsman/messenger_users/internal/config"
 	"github.com/GalahadKingsman/messenger_users/internal/database"
+	"github.com/GalahadKingsman/messenger_users/internal/repositories/user_repo"
+	"github.com/GalahadKingsman/messenger_users/pkg/messenger_users_api"
 	"google.golang.org/grpc"
+	"log"
 	"net"
 )
 
-func Run(cfg *config.Config) error {
-	if cfg == nil {
-		return fmt.Errorf("config is nil")
-	}
-
-	// 1. Подключаемся к БД
-	db, err := database.Init(cfg)
+func Run(config *config.Config) {
+	db, err := database.Init(config.DB)
 	if err != nil {
-		return fmt.Errorf("failed to init DB: %v", err)
+		log.Fatalf("Ошибка инициализации базы: %v", err)
 	}
-	defer db.Close()
 
-	// 2. Запускаем gRPC-сервер
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", cfg.GRPCPort))
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", config.GRPCPort))
 	if err != nil {
-		return fmt.Errorf("failed to listen: %v", err)
+		log.Fatalf("failed to listen: %v", err)
 	}
 
-	grpcServer := grpc.NewServer()
+	var opts []grpc.ServerOption
 
-	return grpcServer.Serve(lis)
+	grpcServer := grpc.NewServer(opts...)
+
+	userRepo := user_repo.New(db)
+	service := userservice.New(userRepo)
+	messenger_users_api.RegisterUserServiceServer(grpcServer, service)
+
+	err = grpcServer.Serve(lis)
+	if err != nil {
+		log.Println(err)
+	}
 }

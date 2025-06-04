@@ -12,7 +12,7 @@ type Repo struct {
 	db *sql.DB
 }
 
-func NewF(db *sql.DB) *Repo {
+func New(db *sql.DB) *Repo {
 	return &Repo{
 		db: db,
 	}

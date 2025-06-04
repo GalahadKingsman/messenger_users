@@ -2,7 +2,7 @@ package userservice
 
 import (
 	"github.com/GalahadKingsman/messenger_users/internal/repositories/user_repo"
-	pb "github.com/GalahadKingsman/messenger_users/pkg/messenger_users_api"
+	pb "github.com/GalahadKingsman/messenger_users/pkg/messenger_users_api" // Импорт сгенерированного пакета
 )
 
 type Service struct {
