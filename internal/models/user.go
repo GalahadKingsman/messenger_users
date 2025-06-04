@@ -8,3 +8,12 @@ type User struct {
 	Email     string
 	Phone     string
 }
+
+type GetUserFilter struct {
+	Id        *int64
+	Login     *string
+	FirstName *string
+	LastName  *string
+	Email     *string
+	Phone     *string
+}

@@ -17,32 +17,6 @@ type Service struct {
 	pb.UnimplementedUserServiceServer
 }
 
-func (s *Service) CreateUser(ctx context.Context, req *pb.CreateRequest) (*pb.CreateResponse, error) {
-	// Валидация входных данных
-	if req.GetFirstName() == "" || req.GetEmail() == "" {
-		return nil, errors.New("имя и email обязательны для заполнения")
-	}
-
-	// Создание пользователя
-	user := &models.User{
-		Login:     req.GetLogin(),
-		FirstName: req.GetFirstName(),
-		LastName:  req.GetLastName(),
-		Email:     req.GetEmail(),
-		Phone:     req.GetPhone(),
-	}
-
-	// Сохранение пользователя в базе данных
-	id, err := database.CreateUser(*user)
-	if err != nil {
-		return nil, fmt.Errorf("ошибка при создании пользователя: %v", err)
-	}
-
-	// Формирование ответа
-	return &pb.CreateResponse{
-		Success: fmt.Sprintf("Пользователь успешно создан с ID: %s", id),
-	}, nil
-}
 func (s *Service) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.GetUserResponse, error) {
 	var (
 		query = "SELECT id, login, first_name, last_name, email, phone FROM users"
@@ -89,7 +63,7 @@ func (s *Service) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.GetU
 	if err != nil {
 		return nil, fmt.Errorf("пользователь не найден: %v", err)
 	}
-	return &pb.GetUserResponse{Id: user.ID,
+	return &pb.GetUserResponse{Id: int64(user.ID),
 		Login:     user.Login,
 		FirstName: user.FirstName,
 		LastName:  user.LastName,

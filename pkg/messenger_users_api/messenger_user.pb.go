@@ -226,13 +226,8 @@ func (x *GetUserRequest) GetPhone() string {
 }
 
 type GetUserResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Login         string                 `protobuf:"bytes,2,opt,name=login,proto3" json:"login,omitempty"`
-	FirstName     string                 `protobuf:"bytes,3,opt,name=first_name,json=firstName,proto3" json:"first_name,omitempty"`
-	LastName      string                 `protobuf:"bytes,4,opt,name=last_name,json=lastName,proto3" json:"last_name,omitempty"`
-	Email         string                 `protobuf:"bytes,5,opt,name=email,proto3" json:"email,omitempty"`
-	Phone         string                 `protobuf:"bytes,6,opt,name=phone,proto3" json:"phone,omitempty"`
+	state         protoimpl.MessageState  `protogen:"open.v1"`
+	Users         []*GetUserResponse_User `protobuf:"bytes,1,rep,name=users,proto3" json:"users,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -267,42 +262,91 @@ func (*GetUserResponse) Descriptor() ([]byte, []int) {
 	return file_api_messenger_user_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *GetUserResponse) GetId() int64 {
+func (x *GetUserResponse) GetUsers() []*GetUserResponse_User {
+	if x != nil {
+		return x.Users
+	}
+	return nil
+}
+
+type GetUserResponse_User struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Login         string                 `protobuf:"bytes,2,opt,name=login,proto3" json:"login,omitempty"`
+	FirstName     string                 `protobuf:"bytes,3,opt,name=first_name,json=firstName,proto3" json:"first_name,omitempty"`
+	LastName      string                 `protobuf:"bytes,4,opt,name=last_name,json=lastName,proto3" json:"last_name,omitempty"`
+	Email         string                 `protobuf:"bytes,5,opt,name=email,proto3" json:"email,omitempty"`
+	Phone         string                 `protobuf:"bytes,6,opt,name=phone,proto3" json:"phone,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetUserResponse_User) Reset() {
+	*x = GetUserResponse_User{}
+	mi := &file_api_messenger_user_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetUserResponse_User) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetUserResponse_User) ProtoMessage() {}
+
+func (x *GetUserResponse_User) ProtoReflect() protoreflect.Message {
+	mi := &file_api_messenger_user_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetUserResponse_User.ProtoReflect.Descriptor instead.
+func (*GetUserResponse_User) Descriptor() ([]byte, []int) {
+	return file_api_messenger_user_proto_rawDescGZIP(), []int{3, 0}
+}
+
+func (x *GetUserResponse_User) GetId() int64 {
 	if x != nil {
 		return x.Id
 	}
 	return 0
 }
 
-func (x *GetUserResponse) GetLogin() string {
+func (x *GetUserResponse_User) GetLogin() string {
 	if x != nil {
 		return x.Login
 	}
 	return ""
 }
 
-func (x *GetUserResponse) GetFirstName() string {
+func (x *GetUserResponse_User) GetFirstName() string {
 	if x != nil {
 		return x.FirstName
 	}
 	return ""
 }
 
-func (x *GetUserResponse) GetLastName() string {
+func (x *GetUserResponse_User) GetLastName() string {
 	if x != nil {
 		return x.LastName
 	}
 	return ""
 }
 
-func (x *GetUserResponse) GetEmail() string {
+func (x *GetUserResponse_User) GetEmail() string {
 	if x != nil {
 		return x.Email
 	}
 	return ""
 }
 
-func (x *GetUserResponse) GetPhone() string {
+func (x *GetUserResponse_User) GetPhone() string {
 	if x != nil {
 		return x.Phone
 	}
@@ -337,8 +381,10 @@ const file_api_messenger_user_proto_rawDesc = "" +
 	"\n" +
 	"_last_nameB\b\n" +
 	"\x06_emailB\b\n" +
-	"\x06_phone\"\x9f\x01\n" +
-	"\x0fGetUserResponse\x12\x0e\n" +
+	"\x06_phone\"\xda\x01\n" +
+	"\x0fGetUserResponse\x120\n" +
+	"\x05users\x18\x01 \x03(\v2\x1a.user.GetUserResponse.UserR\x05users\x1a\x94\x01\n" +
+	"\x04User\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x14\n" +
 	"\x05login\x18\x02 \x01(\tR\x05login\x12\x1d\n" +
 	"\n" +
@@ -363,23 +409,25 @@ func file_api_messenger_user_proto_rawDescGZIP() []byte {
 	return file_api_messenger_user_proto_rawDescData
 }
 
-var file_api_messenger_user_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_api_messenger_user_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_api_messenger_user_proto_goTypes = []any{
-	(*CreateRequest)(nil),   // 0: user.CreateRequest
-	(*CreateResponse)(nil),  // 1: user.CreateResponse
-	(*GetUserRequest)(nil),  // 2: user.GetUserRequest
-	(*GetUserResponse)(nil), // 3: user.GetUserResponse
+	(*CreateRequest)(nil),        // 0: user.CreateRequest
+	(*CreateResponse)(nil),       // 1: user.CreateResponse
+	(*GetUserRequest)(nil),       // 2: user.GetUserRequest
+	(*GetUserResponse)(nil),      // 3: user.GetUserResponse
+	(*GetUserResponse_User)(nil), // 4: user.GetUserResponse.User
 }
 var file_api_messenger_user_proto_depIdxs = []int32{
-	0, // 0: user.UserService.CreateUser:input_type -> user.CreateRequest
-	2, // 1: user.UserService.GetUser:input_type -> user.GetUserRequest
-	1, // 2: user.UserService.CreateUser:output_type -> user.CreateResponse
-	3, // 3: user.UserService.GetUser:output_type -> user.GetUserResponse
-	2, // [2:4] is the sub-list for method output_type
-	0, // [0:2] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	4, // 0: user.GetUserResponse.users:type_name -> user.GetUserResponse.User
+	0, // 1: user.UserService.CreateUser:input_type -> user.CreateRequest
+	2, // 2: user.UserService.GetUser:input_type -> user.GetUserRequest
+	1, // 3: user.UserService.CreateUser:output_type -> user.CreateResponse
+	3, // 4: user.UserService.GetUser:output_type -> user.GetUserResponse
+	3, // [3:5] is the sub-list for method output_type
+	1, // [1:3] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_api_messenger_user_proto_init() }
@@ -394,7 +442,7 @@ func file_api_messenger_user_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_messenger_user_proto_rawDesc), len(file_api_messenger_user_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
