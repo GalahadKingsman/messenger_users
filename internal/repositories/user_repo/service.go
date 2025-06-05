@@ -21,8 +21,8 @@ func New(db *sql.DB) *Repo {
 func (r *Repo) CreateUser(user models.User) (int, error) {
 	var id int
 	err := r.db.QueryRow(
-		"INSERT INTO users (login, first_name, last_name, email, phone) VALUES ($1, $2, $3, $4, $5) RETURNING id",
-		user.Login, user.FirstName, user.LastName, user.Email, user.Phone,
+		"INSERT INTO users (login, first_name, last_name, email, phone, password) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id",
+		user.Login, user.FirstName, user.LastName, user.Email, user.Phone, user.Password,
 	).Scan(&id)
 	return id, err
 }
@@ -30,6 +30,13 @@ func (r *Repo) CreateUser(user models.User) (int, error) {
 func (r *Repo) DeleteUser(id int) error {
 	_, err := r.db.Exec("DELETE FROM users WHERE id = $1", id)
 	return err
+}
+
+func (r *Repo) GetUserByLogin(login string) (*models.User, error) {
+	user := &models.User{}
+	err := r.db.QueryRow("SELECT id, login, first_name, last_name, email, phone, password FROM users WHERE login=$1", login).
+		Scan(&user.ID, &user.Login, &user.FirstName, &user.LastName, &user.Email, &user.Phone, &user.Password)
+	return user, err
 }
 
 func (r *Repo) GetUsers(ctx context.Context, filter *models.GetUserFilter) ([]*models.User, error) {
@@ -87,3 +94,13 @@ func (r *Repo) GetUsers(ctx context.Context, filter *models.GetUserFilter) ([]*m
 
 	return users, nil
 }
+
+//CREATE TABLE IF NOT EXISTS users (
+//id SERIAL PRIMARY KEY,
+//login TEXT NOT NULL,
+//first_name TEXT NOT NULL,
+//last_name TEXT NOT NULL,
+//email varchar(255) NOT NULL CHECK (email ~* '^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+[.][A-Za-z]+$'),
+//phone TEXT NOT NULL,
+//password TEXT NOT NULL
+//);

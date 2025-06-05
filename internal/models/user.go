@@ -7,6 +7,7 @@ type User struct {
 	LastName  string
 	Email     string
 	Phone     string
+	Password  string
 }
 
 type GetUserFilter struct {
@@ -16,4 +17,5 @@ type GetUserFilter struct {
 	LastName  *string
 	Email     *string
 	Phone     *string
+	Password  *string
 }

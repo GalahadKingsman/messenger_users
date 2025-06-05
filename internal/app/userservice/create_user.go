@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/GalahadKingsman/messenger_users/internal/models"
 	pb "github.com/GalahadKingsman/messenger_users/pkg/messenger_users_api"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func (s *Service) CreateUser(ctx context.Context, req *pb.CreateRequest) (*pb.CreateResponse, error) {
@@ -13,7 +14,7 @@ func (s *Service) CreateUser(ctx context.Context, req *pb.CreateRequest) (*pb.Cr
 	if req.GetFirstName() == "" || req.GetEmail() == "" {
 		return nil, errors.New("имя и email обязательны для заполнения")
 	}
-
+	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	// Создание пользователя
 	user := models.User{
 		Login:     req.GetLogin(),
@@ -21,6 +22,7 @@ func (s *Service) CreateUser(ctx context.Context, req *pb.CreateRequest) (*pb.Cr
 		LastName:  req.GetLastName(),
 		Email:     req.GetEmail(),
 		Phone:     req.GetPhone(),
+		Password:  string(hashedPassword),
 	}
 
 	// Сохранение пользователя в базе данных
@@ -31,6 +33,6 @@ func (s *Service) CreateUser(ctx context.Context, req *pb.CreateRequest) (*pb.Cr
 
 	// Формирование ответа
 	return &pb.CreateResponse{
-		Success: fmt.Sprintf("Пользователь успешно создан с ID: %s", id),
+		Success: fmt.Sprintf("Пользователь успешно создан с ID: %d", id),
 	}, nil
 }
