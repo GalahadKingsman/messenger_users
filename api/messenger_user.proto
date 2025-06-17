@@ -29,7 +29,6 @@ message LoginRequest {
 }
 
 message LoginResponse {
-  bool success = 1;
   string message = 2;
   int32 user_id = 3;
 }
