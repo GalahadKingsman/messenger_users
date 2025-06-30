@@ -29,8 +29,9 @@ message LoginRequest {
 }
 
 message LoginResponse {
-  string message = 2;
-  int32 user_id = 3;
+  string message = 1;
+  int32 user_id = 2;
+  string token = 3;
 }
 
 message GetUserRequest {
