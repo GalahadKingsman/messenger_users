@@ -15,7 +15,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("Конфиг БД: %+v\n", cfg.DB)
+	fmt.Printf("%+v\n", cfg)
 
 	app.Run(cfg)
 }

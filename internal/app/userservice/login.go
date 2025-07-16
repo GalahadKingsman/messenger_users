@@ -32,4 +32,5 @@ func (s *Service) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginRes
 		UserId:  int32(user.ID),
 		Token:   token,
 	}, nil
+
 }

@@ -7,7 +7,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-var jwtSecret = []byte("supersecretkey") // Лучше — из ENV
+var jwtSecret = []byte("supersecretsupersecretsupersecretkeykeykey")
 
 func GenerateToken(userID string) (string, error) {
 	claims := jwt.MapClaims{
@@ -20,7 +20,7 @@ func GenerateToken(userID string) (string, error) {
 
 func ValidateToken(tokenString string) (string, error) {
 	token, err := jwt.Parse(tokenString, func(t *jwt.Token) (interface{}, error) {
-		// Проверка метода подписи
+
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("unexpected signing method")
 		}
