@@ -1,6 +1,5 @@
 package config
 
-// Config содержит всю конфигурацию приложения
 type DBConfig struct {
 	Host     string `env:"DB_HOST"`
 	Port     string `env:"DB_PORT"`
